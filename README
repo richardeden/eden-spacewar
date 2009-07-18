@@ -1,0 +1,25 @@
+Eden-Spacewar
+
+Created during a "Code something cool in 2 hours competition". The code is extremely rough, but the mechanics are there.
+
+You will need to grab a copy of the gosu gem...
+
+sudo gem install gosu
+
+Then...
+cd eden-spacewar
+ruby main.rb
+
+Controls:
+
+Player1:
+  A - Turn Left
+  D - Turn Right
+  W - Accelerate
+  F - Fire
+  
+Player2:
+  Left-Arrow - Turn Left
+  Right-Arrow - Turn Right
+  Up-Arrow - Accelerate
+  M - Fire
