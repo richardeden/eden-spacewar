@@ -1,16 +1,13 @@
 require 'rubygems'
 require 'gosu'
+require 'missile'
 
 class Ship
-  attr_accessor :x, :y, :vel_x, :vel_y, :angle, :acceleration, :thrust_left, :thrust_right
-  attr_accessor :missile_x, :missile_y
+  attr_accessor :x, :y, :vel_x, :vel_y, :angle, :acceleration, :thrust_left, :thrust_right, :missiles, :window
   
   def initialize(window, start_x, start_y, player_num)
-    set_player_ship(window, player_num)
-    @missile = Gosu::Image::new(window, "images/missile.png", false)
-    @missile_x = 0.0
-    @missile_y = 0.0
-    @missile_angle = 0.0
+    @window = window
+    set_player_ship(player_num)
     @x = start_x
     @y = start_y
     @vel_x = 0.0
@@ -18,32 +15,28 @@ class Ship
     @angle = 0.0
     @thrust_left = 0.0
     @thrust_right = 0.0
-    @firing = false
     @acceleration = 0.1
+    @missiles = []
+  end
+    
+  def set_player_ship(num)
+    if num == 1
+      @ship_image = Gosu::Image::new(@window, "images/player_ship_red.png", false)
+    else
+      @ship_image = Gosu::Image::new(@window, "images/player_ship_blue.png", false)
+    end
   end
   
-  def player_hit?(missile_x, missile_y)
-    if Gosu::distance(@x, @y, missile_x, missile_y) < 35
-      return true
+  def hit_opponent?(opponent_x, opponent_y)
+    return false if @missiles.empty?
+    @missiles.each do |missile|
+      if Gosu::distance(opponent_x, opponent_y, missile.x, missile.y) < 35
+        return true
+      end
     end
     false
   end
-  
-  def set_player_ship(window, num)
-    if num == 1
-      @ship_image = Gosu::Image::new(window, "images/player_ship_red.png", false)
-    else
-      @ship_image = Gosu::Image::new(window, "images/player_ship_blue.png", false)
-    end
-  end
-  
-  def reset_missile
-    @firing = false
-    @missile_x = 0.0
-    @missile_y = 0.0
-    @missile_angle = 0.0
-  end
-  
+
   def turn_left
     @angle -= 4.5
   end
@@ -75,29 +68,28 @@ class Ship
   end
   
   def fire
-    @firing = true
-    @missile_angle = @angle
-    @missile_x = @x + 20.0
-    @missile_y = @y
+    @missiles << Missile.new(@x + 20.0, @y, @angle, @window)
   end
   
   def firing?
-    @firing
+    @missiles.empty? ? false : true      
   end
   
-  def update_missile
-    @missile_x += Gosu::offset_x(@missile_angle, 4.0)
-    @missile_y += Gosu::offset_y(@missile_angle, 4.0)
-    if @missile_x > 800 or @missile_x < 0 or @missile_y > 800 or @missile_y < 0
-      reset_missile
+  def update_missiles
+    @missiles.each do |missile|
+      if missile.offscreen?
+        @missiles.delete(missile)
+      else
+        missile.update
+      end
     end
   end
 
   def draw
-    if @firing
-      update_missile
-      @missile.draw_rot(@missile_x, @missile_y, 1, @missile_angle)
+    if firing?
+      update_missiles
     end
     @ship_image.draw_rot(@x, @y, 1, @angle)
   end
+  
 end

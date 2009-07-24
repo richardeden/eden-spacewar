@@ -41,15 +41,15 @@ class GameWindow < Gosu::Window
     if button_down? Gosu::Button::KbM
       update_player_two('fire')
     end
-    
+   
     if @player_one_ship.firing?
-      if @player_two_ship.player_hit?(@player_one_ship.missile_x, @player_one_ship.missile_y)
+      if @player_one_ship.hit_opponent?(@player_two_ship.x, @player_two_ship.y)
         player_wins(1)
       end
     end
-    
+
     if @player_two_ship.firing?
-      if @player_one_ship.player_hit?(@player_two_ship.missile_x, @player_two_ship.missile_y)
+      if @player_two_ship.hit_opponent?(@player_one_ship.x, @player_one_ship.y)
         player_wins(2)
       end
     end
