@@ -2,17 +2,31 @@ require 'rubygems'
 require 'gosu'
 require 'ship'
 
+VERSION = '0.1.1'
+
 class GameWindow < Gosu::Window
   
   def initialize
     super(800, 600, false)
-    self.caption = "Eden - Code Something Cool in 2 Hours"
+    self.caption = "Eden Spacewar " + VERSION
     @background = Gosu::Image::new(self, "images/background.png", false)
     @player_one_ship = Ship.new(self, 40.0, 40.0, 1)
     @player_two_ship = Ship.new(self, 760.0, 580.0, 2)
     @display_text = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @game_over = false
     @winner = 0
+    @timer = nil
+  end
+  
+  def restart
+    @player_one_ship.reset(40.0, 40.0)
+    @player_two_ship.reset(760.0, 580.0)
+    if @timer.nil?
+      @timer = Time.now
+    elsif ((Time.now - @timer)  > 3)
+        @game_over = false
+        @timer = nil
+    end
   end
 
   def update
@@ -53,7 +67,7 @@ class GameWindow < Gosu::Window
         player_wins(2)
       end
     end
-    
+
     @player_one_ship.move_ship
     @player_two_ship.move_ship
   end
@@ -66,7 +80,7 @@ class GameWindow < Gosu::Window
   
   def update_player_two(action=nil)
     unless action.nil?
-      @player_two_ship.send(action)
+      @player_two_ship.send(action) 
     end
   end
   
@@ -78,7 +92,8 @@ class GameWindow < Gosu::Window
   def draw
     @background.draw(0,0,0)
     if @game_over
-      @display_text.draw("Player #{@winner} wins!!!", 300, 300, 1, 1.0, 1.0, 0xffffff00)
+      @display_text.draw("Player #{@winner} wins!!!", 350, 300, 1, 1.0, 1.0, 0xffffff00)
+      restart
     else
       @player_one_ship.draw
       @player_two_ship.draw
