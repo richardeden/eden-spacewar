@@ -1,11 +1,12 @@
 class Missile
-  attr_accessor :x, :y
+  attr_accessor :x, :y, :angle, :time_fired
   
   def initialize(x,y,angle,window)
     @image = Gosu::Image::new(window, "images/missile.png", false)
     @x = x
     @y = y
     @angle = angle
+    @time_fired = Time.now
   end
   
   def update
