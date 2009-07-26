@@ -67,6 +67,10 @@ class Ship
   def move_ship
     @x += @vel_x
     @y += @vel_y
+    
+    #make sure we don't go off the screen
+    @x %= 800
+    @y %= 600
   end
   
   def fire
