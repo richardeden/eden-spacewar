@@ -2,7 +2,7 @@ Eden-Spacewar
 
 Created during a "Code something cool in 2 hours competition". The code is extremely rough, but the mechanics are there.
 
-You will need to grab a copy of the gosu gem...
+You will need to grab a copy of the gosu gem (omit the sudo if on Windows)...
 
 sudo gem install gosu
 
@@ -23,3 +23,14 @@ Player2:
   Right-Arrow - Turn Right
   Up-Arrow - Accelerate
   M - Fire
+  
+Future Features:
+  - Game automatically restarts after someone wins
+  - The player appears back on the opposite side of the screen when they go out of the screen limits.
+  - Planets with gravitational pull
+  - Different missile types
+  - Particle effects
+  - Asteroids and Debris
+  - Bigger universe with mini-map
+  - Network play
+  
