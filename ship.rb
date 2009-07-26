@@ -68,7 +68,15 @@ class Ship
   end
   
   def fire
-    @missiles << Missile.new(@x + 20.0, @y, @angle, @window)
+    unless @missiles.size >= 10
+      if @missiles.size > 0
+        if (Time.now - @missiles.last.time_fired) > 1
+          @missiles << Missile.new(@x + 20.0, @y, @angle, @window)
+        end
+      else
+        @missiles << Missile.new(@x + 20.0, @y, @angle, @window)
+      end
+    end
   end
   
   def firing?
