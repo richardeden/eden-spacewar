@@ -3,20 +3,22 @@ require 'gosu'
 require 'missile'
 
 class Ship
-  attr_accessor :x, :y, :vel_x, :vel_y, :angle, :acceleration, :thrust_left, :thrust_right, :missiles, :window
+  attr_accessor :x, :y, :vel_x, :vel_y, :angle, :acceleration, :missiles, :window
   
   def initialize(window, start_x, start_y, player_num)
     @window = window
     set_player_ship(player_num)
-    @x = start_x
-    @y = start_y
+    reset(start_x, start_y)
+  end
+  
+  def reset(x, y)
+    @x = x
+    @y = y
     @vel_x = 0.0
     @vel_y = 0.0
     @angle = 0.0
-    @thrust_left = 0.0
-    @thrust_right = 0.0
-    @acceleration = 0.1
     @missiles = []
+    @acceleration = 0.1
   end
     
   def set_player_ship(num)
