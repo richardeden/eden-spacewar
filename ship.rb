@@ -3,7 +3,7 @@ require 'gosu'
 require 'missile'
 
 class Ship
-  attr_accessor :x, :y, :vel_x, :vel_y, :angle, :acceleration, :missiles, :window
+  attr_accessor :x, :y, :vel_x, :vel_y, :angle, :top_speed, :missiles, :window
   
   def initialize(window, start_x, start_y, player_num)
     @window = window
@@ -18,7 +18,7 @@ class Ship
     @vel_y = 0.0
     @angle = 0.0
     @missiles = []
-    @acceleration = 0.1
+    @top_speed = 5.0
   end
     
   def set_player_ship(num)
@@ -32,7 +32,7 @@ class Ship
   def hit_opponent?(opponent_x, opponent_y)
     return false if @missiles.empty?
     @missiles.each do |missile|
-      if Gosu::distance(opponent_x, opponent_y, missile.x, missile.y) < 35
+      if Gosu::distance(opponent_x, opponent_y, missile.x, missile.y) < 20
         return true
       end
     end
@@ -47,19 +47,8 @@ class Ship
     @angle += 4.5
   end
   
-  def thrust_down
-    if @vel_x > 0.2 && @vel_y > 0.2
-      @vel_x *= 0.95
-      @vel_y *= 0.95
-    end
-  end
   
   def accelerate
-    if @acceleration < 2.0
-      @acceleration = @acceleration + 0.1
-    else
-      @acceleration = 2.0
-    end
     @vel_x += Gosu::offset_x(@angle, 0.1)
     @vel_y += Gosu::offset_y(@angle, 0.1)
   end

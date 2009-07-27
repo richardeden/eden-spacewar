@@ -2,13 +2,13 @@ require 'rubygems'
 require 'gosu'
 require 'ship'
 
-VERSION = '0.1.1'
+ES_VERSION = '0.1.1'
 
 class GameWindow < Gosu::Window
   
   def initialize
     super(800, 600, false)
-    self.caption = "Eden Spacewar " + VERSION
+    self.caption = "Eden Spacewar " + ES_VERSION
     @background = Gosu::Image::new(self, "images/background.png", false)
     @player_one_ship = Ship.new(self, 40.0, 40.0, 1)
     @player_two_ship = Ship.new(self, 760.0, 580.0, 2)
