@@ -1,8 +1,14 @@
 require 'rubygems'
 require 'gosu'
 require 'ship'
+require 'asteroid'
 
-ES_VERSION = '0.1.1'
+ES_VERSION = '0.1.5'
+
+#setup z-ordering
+module ZOrder
+  Background, Asteroids, Ships, UI = *0..3
+end
 
 class GameWindow < Gosu::Window
   
@@ -13,6 +19,7 @@ class GameWindow < Gosu::Window
     @player_one_ship = Ship.new(self, 40.0, 40.0, 1)
     @player_two_ship = Ship.new(self, 760.0, 580.0, 2)
     @display_text = Gosu::Font.new(self, Gosu::default_font_name, 20)
+    @asteroids = []
     @game_over = false
     @winner = 0
     @timer = nil
@@ -67,7 +74,12 @@ class GameWindow < Gosu::Window
         player_wins(2)
       end
     end
-
+    
+    if rand(1000) < 3 && @asteroids.size < 5
+      @asteroids << Asteroid.new(self)
+    end
+    
+    update_asteroids if @asteroids.size > 0
     @player_one_ship.move_ship
     @player_two_ship.move_ship
   end
@@ -91,6 +103,7 @@ class GameWindow < Gosu::Window
 
   def draw
     @background.draw(0,0,0)
+    draw_asteroids
     if @game_over
       @display_text.draw("Player #{@winner} wins!!!", 350, 300, 1, 1.0, 1.0, 0xffffff00)
       restart
@@ -105,6 +118,23 @@ class GameWindow < Gosu::Window
       close
     end
   end
+  
+  #loop through the asteroids and draw
+  def draw_asteroids
+    if @asteroids.size > 0
+      @asteroids.each do |asteroid|
+        asteroid.draw
+      end
+    end
+  end
+  
+  def update_asteroids
+    @asteroids.each do |asteroid|
+      @asteroids.delete(asteroid) if asteroid.offscreen?
+      asteroid.update
+    end
+  end
+  
 end
 
 window = GameWindow.new.show
