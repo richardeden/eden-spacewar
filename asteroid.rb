@@ -23,6 +23,10 @@ class Asteroid
     false
   end
   
+  def collision?(player_x, player_y)
+    Gosu::distance(player_x, player_y, @x, @y) < 40 ? true : false
+  end
+  
   def draw
       img = @image[Gosu::milliseconds / 100 % @image.size]
       img.draw((@x - img.width / 2.0), (@y - img.height / 2.0), 0, 1, 1)

@@ -75,6 +75,16 @@ class GameWindow < Gosu::Window
       end
     end
     
+    unless @asteroids.empty?
+      @asteroids.each do |asteroid|
+        if asteroid.collision?(@player_one_ship.x, @player_one_ship.y)
+          player_wins(2)
+        elsif asteroid.collision?(@player_two_ship.x, @player_two_ship.y)
+          player_wins(1)
+        end
+      end
+    end
+    
     if rand(1000) < 3 && @asteroids.size < 5
       @asteroids << Asteroid.new(self)
     end
