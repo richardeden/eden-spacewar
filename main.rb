@@ -28,6 +28,7 @@ class GameWindow < Gosu::Window
   def restart
     @player_one_ship.reset(40.0, 40.0)
     @player_two_ship.reset(760.0, 580.0)
+    @asteroids = []
     if @timer.nil?
       @timer = Time.now
     elsif ((Time.now - @timer)  > 3)
