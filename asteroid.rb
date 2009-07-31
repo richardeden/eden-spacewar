@@ -4,10 +4,16 @@ require 'gosu'
 class Asteroid
   attr_accessor :x, :y, :angle
   
-  def initialize(window)
-    @image = Gosu::Image::load_tiles(window, "images/asteroids.png", 49, 50, false)
-    @x = rand(800)
-    @y = 0
+  def initialize(window, opts={})
+    unless opts[:x].nil? && opts[:y].nil?
+      @image = Gosu::Image::load_tiles(window, "images/small_asteroids.png", 29, 29, false)
+      @x = opts[:x]
+      @y = opts[:y]
+    else
+      @image = Gosu::Image::load_tiles(window, "images/asteroids.png", 49, 50, false)
+      @x = rand(800)
+      @y = 0
+    end
     @angle = rand(360.0)
   end
   
@@ -27,9 +33,19 @@ class Asteroid
     Gosu::distance(player_x, player_y, @x, @y) < 40 ? true : false
   end
   
+  def hit_by_missile?(player)
+    player.missiles.each do |missile|
+      if Gosu::distance(@x, @y, missile.x, missile.y) < 20
+        player.missiles.delete(missile)
+        return true
+      end
+    end
+    false
+  end
+  
   def draw
-      img = @image[Gosu::milliseconds / 100 % @image.size]
-      img.draw((@x - img.width / 2.0), (@y - img.height / 2.0), 0, 1, 1)
+    img = @image[Gosu::milliseconds / 100 % @image.size]
+    img.draw((@x - img.width / 2.0), (@y - img.height / 2.0), 0, 1, 1)
   end
   
 end
