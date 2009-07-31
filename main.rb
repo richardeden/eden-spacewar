@@ -20,6 +20,7 @@ class GameWindow < Gosu::Window
     @player_two_ship = Ship.new(self, 760.0, 580.0, 2)
     @display_text = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @asteroids = []
+    @small_asteroids = []
     @game_over = false
     @winner = 0
     @timer = nil
@@ -29,6 +30,7 @@ class GameWindow < Gosu::Window
     @player_one_ship.reset(40.0, 40.0)
     @player_two_ship.reset(760.0, 580.0)
     @asteroids = []
+    @small_asteroids = []
     if @timer.nil?
       @timer = Time.now
     elsif ((Time.now - @timer)  > 3)
@@ -68,11 +70,37 @@ class GameWindow < Gosu::Window
       if @player_one_ship.hit_opponent?(@player_two_ship.x, @player_two_ship.y)
         player_wins(1)
       end
+      @small_asteroids.each do |small_asteroid|
+        if small_asteroid.hit_by_missile?(@player_one_ship)
+          @small_asteroids.delete(small_asteroid)
+        end
+      end
+      @asteroids.each do |asteroid|
+        if asteroid.hit_by_missile?(@player_one_ship)
+          @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y})
+          @small_asteroids << Asteroid.new(self,{:x => asteroid.x, :y => asteroid.y})
+          @small_asteroids.flatten
+          @asteroids.delete(asteroid)
+        end
+      end
     end
 
     if @player_two_ship.firing?
       if @player_two_ship.hit_opponent?(@player_one_ship.x, @player_one_ship.y)
         player_wins(2)
+      end
+      @small_asteroids.each do |small_asteroid|
+        if small_asteroid.hit_by_missile?(@player_one_ship)
+          @small_asteroids.delete(small_asteroid)
+        end
+      end
+      @asteroids.each do |asteroid|
+        if asteroid.hit_by_missile?(@player_two_ship)
+          @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y}) 
+          @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y})
+          @small_asteroids.flatten
+          @asteroids.delete(asteroid)
+        end
       end
     end
     
@@ -90,7 +118,7 @@ class GameWindow < Gosu::Window
       @asteroids << Asteroid.new(self)
     end
     
-    update_asteroids if @asteroids.size > 0
+    update_asteroids
     @player_one_ship.move_ship
     @player_two_ship.move_ship
   end
@@ -132,10 +160,13 @@ class GameWindow < Gosu::Window
   
   #loop through the asteroids and draw
   def draw_asteroids
-    if @asteroids.size > 0
+    unless @asteroids.empty?
       @asteroids.each do |asteroid|
         asteroid.draw
       end
+    end
+    @small_asteroids.flatten.each do |small_asteroid|
+      small_asteroid.draw
     end
   end
   
@@ -143,6 +174,10 @@ class GameWindow < Gosu::Window
     @asteroids.each do |asteroid|
       @asteroids.delete(asteroid) if asteroid.offscreen?
       asteroid.update
+    end
+    @small_asteroids.each do |small_asteroid|
+      @small_asteroids.delete(small_asteroid) if small_asteroid.offscreen?
+      small_asteroid.update
     end
   end
   
