@@ -40,12 +40,12 @@ class Asteroid
   def hit_by_missile?(player)
     player.missiles.each do |missile|
       if @type == LARGE_ASTEROID
-        if Gosu::distance(@x, @y, missile.x, missile.y) < 20 
+        if Gosu::distance(@x, @y, missile.x, missile.y) < 25 
           player.missiles.delete(missile)
           return true
         end
       elsif @type == 2
-        if Gosu::distance(@x, @y, missile.x, missile.y) < 5
+        if Gosu::distance(@x, @y, missile.x, missile.y) < 10
           player.missiles.delete(missile)
           return true
         end
