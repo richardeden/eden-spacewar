@@ -70,17 +70,17 @@ class GameWindow < Gosu::Window
       if @player_one_ship.hit_opponent?(@player_two_ship.x, @player_two_ship.y)
         player_wins(1)
       end
-      @small_asteroids.each do |small_asteroid|
-        if small_asteroid.hit_by_missile?(@player_one_ship)
-          @small_asteroids.delete(small_asteroid)
-        end
-      end
       @asteroids.each do |asteroid|
         if asteroid.hit_by_missile?(@player_one_ship)
           @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y})
-          @small_asteroids << Asteroid.new(self,{:x => asteroid.x, :y => asteroid.y})
+          @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y})
           @small_asteroids.flatten
           @asteroids.delete(asteroid)
+        end
+      end
+      @small_asteroids.each do |small_asteroid|
+        if small_asteroid.hit_by_missile?(@player_one_ship)
+          @small_asteroids.delete(small_asteroid)
         end
       end
     end
@@ -89,17 +89,17 @@ class GameWindow < Gosu::Window
       if @player_two_ship.hit_opponent?(@player_one_ship.x, @player_one_ship.y)
         player_wins(2)
       end
-      @small_asteroids.each do |small_asteroid|
-        if small_asteroid.hit_by_missile?(@player_one_ship)
-          @small_asteroids.delete(small_asteroid)
-        end
-      end
       @asteroids.each do |asteroid|
         if asteroid.hit_by_missile?(@player_two_ship)
           @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y}) 
           @small_asteroids << Asteroid.new(self, {:x => asteroid.x, :y => asteroid.y})
           @small_asteroids.flatten
           @asteroids.delete(asteroid)
+        end
+      end
+      @small_asteroids.each do |small_asteroid|
+        if small_asteroid.hit_by_missile?(@player_two_ship)
+          @small_asteroids.delete(small_asteroid)
         end
       end
     end

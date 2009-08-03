@@ -2,17 +2,21 @@ require 'rubygems'
 require 'gosu'
 
 class Asteroid
-  attr_accessor :x, :y, :angle
+  attr_accessor :x, :y, :angle, :type
+  LARGE_ASTEROID = 1
+  SMALL_ASTEROID = 2
   
   def initialize(window, opts={})
     unless opts[:x].nil? && opts[:y].nil?
       @image = Gosu::Image::load_tiles(window, "images/small_asteroids.png", 29, 29, false)
       @x = opts[:x]
       @y = opts[:y]
+      @type = SMALL_ASTEROID
     else
       @image = Gosu::Image::load_tiles(window, "images/asteroids.png", 49, 50, false)
       @x = rand(800)
       @y = 0
+      @type = LARGE_ASTEROID
     end
     @angle = rand(360.0)
   end
@@ -35,9 +39,16 @@ class Asteroid
   
   def hit_by_missile?(player)
     player.missiles.each do |missile|
-      if Gosu::distance(@x, @y, missile.x, missile.y) < 20
-        player.missiles.delete(missile)
-        return true
+      if @type == LARGE_ASTEROID
+        if Gosu::distance(@x, @y, missile.x, missile.y) < 20 
+          player.missiles.delete(missile)
+          return true
+        end
+      elsif @type == 2
+        if Gosu::distance(@x, @y, missile.x, missile.y) < 5
+          player.missiles.delete(missile)
+          return true
+        end
       end
     end
     false
